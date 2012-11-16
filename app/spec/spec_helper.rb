@@ -4,6 +4,9 @@ require 'dm-rspec2'
 require 'rack/test'
 require 'sinatra'
 
+app_dir = File.expand_path('../../', __FILE__) # get absolute directory of app directory
+Dir["#{app_dir}/models/**/*.rb"].each { |f| require f }
+
 set :environment, :test
 set :run, false
 set :raise_error, true
