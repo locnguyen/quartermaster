@@ -25,6 +25,9 @@ GEM
     dm-core (1.0.2)
       addressable (~> 2.2)
       extlib (~> 0.9.15)
+    dm-do-adapter (1.0.2)
+      data_objects (~> 0.10.2)
+      dm-core (~> 1.0.2)
     dm-migrations (1.0.2)
       dm-core (~> 1.0.2)
     dm-rspec2 (0.3.0)
@@ -35,6 +38,9 @@ GEM
       dm-core (~> 1.0.2)
       fastercsv (~> 1.5.3)
       json_pure (~> 1.4)
+    dm-sqlite-adapter (1.0.2)
+      dm-do-adapter (~> 1.0.2)
+      do_sqlite3 (~> 0.10.2)
     dm-timestamps (1.0.2)
       dm-core (~> 1.0.2)
     dm-transactions (1.0.2)
@@ -55,6 +61,12 @@ GEM
       data_objects (= 0.10.10)
       do_jdbc (= 0.10.10)
       jdbc-postgres (>= 8.2)
+    do_sqlite3 (0.10.10)
+      data_objects (= 0.10.10)
+    do_sqlite3 (0.10.10-java)
+      data_objects (= 0.10.10)
+      do_jdbc (= 0.10.10)
+      jdbc-sqlite3 (>= 3.5.8)
     eventmachine (1.0.0)
     eventmachine (1.0.0-java)
     extlib (0.9.15)
@@ -73,6 +85,7 @@ GEM
       guard (>= 1.1)
       rspec (~> 2.11)
     jdbc-postgres (9.1.901)
+    jdbc-sqlite3 (3.7.2)
     jruby-rack (1.1.10)
     json (1.7.5)
     json (1.7.5-java)
@@ -136,8 +149,10 @@ PLATFORMS
 DEPENDENCIES
   data_mapper
   dm-rspec2
+  dm-sqlite-adapter
   do_jdbc
   do_postgres
+  do_sqlite3
   guard-bundler
   guard-rspec
   json
