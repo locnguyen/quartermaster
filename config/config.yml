@@ -1,5 +1,11 @@
 development:
-  dbName: quartermaster-development.db
+  tmpDir: 'tmp'
+  dbName: development.db
 
 test:
-  dbName: quartermaster-test.db
+  tmpDir: 'tmp'
+  dbName: test.db
+
+production:
+  tmpDir: 'tmp'
+  dbName: production.db

@@ -5,11 +5,8 @@ gem 'sinatra-contrib'
 gem 'logger'
 gem 'json'
 gem 'rack-cors'
-gem 'data_mapper'
-gem 'do_jdbc'
-
-
-gem 'trinidad', :require => nil
+gem 'data_mapper', '1.2.0'
+gem 'thin'
 
 group :development, :test do
   gem 'rspec'
@@ -19,7 +16,6 @@ group :development, :test do
   gem 'guard-bundler'
   gem 'rb-inotify', '~> 0.8.8', :require => false
   gem 'rack-test'
-  gem 'do_sqlite3'
   gem 'dm-sqlite-adapter'
 end
 
