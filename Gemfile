@@ -6,7 +6,7 @@ gem 'logger'
 gem 'json'
 gem 'rack-cors'
 gem 'data_mapper', '1.2.0'
-gem 'thin'
+gem 'trinidad', :require => nil
 
 group :development, :test do
   gem 'rspec'
@@ -20,5 +20,5 @@ group :development, :test do
 end
 
 group :production do
-  gem 'do_postgres'
+  gem 'dm-postgres-adapter'
 end
