@@ -8,4 +8,6 @@ describe Reservation do
 
   it { should have_many :line_items }
   it { should have_many(:assets).through(:line_items) }
+
+  it "can create a line item"
 end

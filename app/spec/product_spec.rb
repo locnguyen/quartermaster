@@ -6,4 +6,6 @@ describe Product do
   it { should have_property :manufacturer }
 
   it { should have_many :assets }
+
+  it "can create an asset"
 end

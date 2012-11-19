@@ -9,4 +9,6 @@ describe Asset do
   it { should belong_to :product }
   it { should have_many :line_items }
   it { should have_many(:reservations).through(:line_items) }
+
+  it "must be created with a product"
 end
