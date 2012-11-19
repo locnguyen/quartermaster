@@ -30,6 +30,9 @@ GEM
       dm-core (~> 1.2.0)
     dm-migrations (1.2.0)
       dm-core (~> 1.2.0)
+    dm-postgres-adapter (1.2.0)
+      dm-do-adapter (~> 1.2.0)
+      do_postgres (~> 0.10.6)
     dm-rspec2 (0.3.0)
       dm-core
       dm-types
@@ -153,9 +156,9 @@ PLATFORMS
 
 DEPENDENCIES
   data_mapper (= 1.2.0)
+  dm-postgres-adapter
   dm-rspec2
   dm-sqlite-adapter
-  do_postgres
   guard-bundler
   guard-rspec
   json
