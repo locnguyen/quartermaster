@@ -7,5 +7,15 @@ describe Product do
 
   it { should have_many :assets }
 
-  it "can create an asset"
+  it "should create an asset" do
+    asset = subject.create_asset
+    asset.should be
+  end
+
+  it "should create an asset and add to the product collection" do
+    before_count = subject.assets.size
+    subject.create_asset
+    after_count = subject.assets.size
+    before_count.should < after_count
+  end
 end

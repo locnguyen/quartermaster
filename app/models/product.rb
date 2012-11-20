@@ -11,4 +11,10 @@ class Product
   property :updated_at , DateTime
 
   has n, :assets
+
+  def create_asset
+    asset = Asset.new({ product: self })
+    assets << asset
+    asset
+  end
 end
