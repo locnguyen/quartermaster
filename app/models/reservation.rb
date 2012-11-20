@@ -11,4 +11,14 @@ class Reservation
 
   has n, :line_items
   has n, :assets, :through => :line_items
+
+  def initialize
+    @line_items = []
+  end
+
+  def create_line_item
+    line_item = LineItem.new({ reservation: self })
+    @line_items << line_item
+    line_item
+  end
 end
