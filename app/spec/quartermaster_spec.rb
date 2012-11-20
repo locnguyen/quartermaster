@@ -7,14 +7,24 @@ describe "The Quartermaster API", :type => :api do
   end
 
   describe "/products" do
-    it "GET should return all products"
 
-    it "POST should create a product"
+    describe "GET" do
+      it "should return all products"
+    end
+
+    describe "POST" do
+      it "should create a product with the request body"
+    end
   end
 
   describe "/product/:id" do
-    it "GET with :id should return the product"
 
-    it "PUT with :id and request body should update a product"
+    describe "GET" do
+      it "should return a product"
+    end
+
+    describe "PUT" do
+      it "should update a product with the request body"
+    end
   end
 end
