@@ -5,6 +5,7 @@ class Asset
 
   property :id, Serial
   property :serial_number, String, required: true
+  property :service_tag, String
   property :acquire_date, Date, required: true
   property :retire_date, Date
 
@@ -15,4 +16,10 @@ class Asset
 
   has n, :line_items
   has n, :reservations, :through => :line_items
+
+  def initialize(attr = {})
+    raise(ArgumentError, "Cannot create an asset without a product", caller) if attr[:product].nil?
+
+    attr.each { |k, v| instance_variable_set("@#{k}", v) unless v.nil? }
+  end
 end
