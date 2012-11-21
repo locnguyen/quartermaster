@@ -64,7 +64,8 @@ class Quartermaster < Sinatra::Base
 
     if product.saved?
       status 201
-      product
+      content_type :json
+      product.to_json
     else
       LOG.debug product.errors.inspect
       halt 500

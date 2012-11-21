@@ -17,14 +17,25 @@ describe "The Quartermaster API", :type => :api do
       it "should return all products"
     end
 
-    context "POST" do
+    context "POST" do 
+      subject { product = { manufacturer: 'Olympus', model_name: 'OM-D EM-5' } }
+      
       it "should respond with 201 if successful" do
-        product = { manufacturer: 'Olympus', model_name: 'OM-D EM-5' }
-        post '/products', product.to_json
+        post '/products', subject.to_json
         last_response.status.should be == 201
       end
 
-      it "should respond with the created product"
+      it "should respond with an ID" do
+        post '/products', subject.to_json
+        json = JSON.parse(last_response.body)
+        json['id'].should be
+      end
+
+      it "should respond with a date for created_at" do
+        post '/products', subject.to_json
+        json = JSON.parse(last_response.body)
+        json['created_at'].should be
+      end
     end
   end
 
