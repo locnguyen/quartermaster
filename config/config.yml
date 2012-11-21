@@ -1,11 +1,18 @@
 development:
-  tmpDir: 'tmp'
-  dbName: development.db
+  tmpDir: tmp
+  username: developer
+  password: password
+  database: quartermaster-dev
+  adapter: postgres
 
 test:
-  tmpDir: 'tmp'
-  dbName: test.db
+  tmpDir: tmp
+  username: developer
+  password: password
+  database: quartermaster-test
+  adapter: postgres
 
 production:
-  tmpDir: 'tmp'
-  dbName: production.db
+  tmpDir: tmp
+  username:
+  password:

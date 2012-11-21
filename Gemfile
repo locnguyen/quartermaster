@@ -6,7 +6,8 @@ gem 'logger'
 gem 'json'
 gem 'rack-cors'
 gem 'data_mapper', '1.2.0'
-gem 'trinidad', :require => nil
+gem 'dm-postgres-adapter'
+gem 'trinidad', :require => false
 
 group :development, :test do
   gem 'rspec'
@@ -15,10 +16,8 @@ group :development, :test do
   gem 'guard-rspec'
   gem 'guard-bundler'
   gem 'rb-inotify', '~> 0.8.8', :require => false
+  gem 'rb-fsevent', :require => false
+  gem 'rb-fchange', :require => false
   gem 'rack-test'
-  gem 'dm-sqlite-adapter'
-end
-
-group :production do
-  gem 'dm-postgres-adapter'
+  gem 'database_cleaner'
 end
