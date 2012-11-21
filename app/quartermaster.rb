@@ -43,12 +43,7 @@ class Quartermaster < Sinatra::Base
     DataMapper::Logger.new("#{Dir.pwd}/#{settings.tmpDir}/dm-test.log", :debug)
     DataMapper::Model.raise_on_save_failure = true
 
-    DataMapper.setup(:default, {
-      adapter: settings.adapter,
-      username: settings.username,
-      password: settings.password,
-      database: settings.database 
-    })
+    DataMapper.setup(:default, 'postgres://developer:password@localhost/quartermaster-test')
 
     DataMapper.finalize
     DataMapper.auto_migrate!
