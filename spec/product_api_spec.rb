@@ -95,5 +95,25 @@ describe "The Products API" do
         last_response.status.should be == 404
       end
     end
+
+    context "DELETE" do
+      it "should respond with 200 if successful" do
+        delete "/product/#{subject.id}"
+        last_response.status.should be == 200
+      end
+
+      it "should respond with 404 if called a second time since the first should have deleted" do
+        delete "/product/#{subject.id}"
+        last_response.status.should be == 200
+
+        delete "/product/#{subject.id}"
+        last_response.status.should be == 404
+      end
+
+      it "should respond with 404 if the product does not exist" do
+        delete '/product/9999'
+        last_response.status.should be == 404
+      end
+    end
   end
 end

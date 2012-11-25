@@ -117,4 +117,20 @@ class Quartermaster < Sinatra::Base
       halt 500
     end
   end
+
+  delete '/product/:id' do
+    product = Product.get(params[:id])
+
+    if product.nil?
+      halt 404
+    end
+
+    if product.destroy
+      content_type :text
+      status 200
+      'Product was deleted'
+    else
+      halt 500
+    end
+  end
 end
