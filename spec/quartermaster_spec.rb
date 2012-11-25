@@ -15,15 +15,30 @@ describe "The Quartermaster API", :type => :api do
 
   describe "/products" do
     context "GET" do
-      it "should return all products" do
+      it "should respond with all products" do
         50.of { Product.gen }
 
         get '/products'
-        json = JSON.parse(last_response.body)
-        json.length.should == 50
+        results = JSON.parse(last_response.body)
+        results.length.should == 50
       end
 
-      it "should return products matching manufacturer"
+      it "should respond with products matching manufacturer" do
+        10.of { Product.gen(:panasonic) }
+
+        get '/products?manufacturer=Panasonic'
+        results = JSON.parse(last_response.body)
+        results.length.should == 10
+      end
+
+      it "should respond with products matching model name" do
+        Product.gen(:panasonic_gh3)
+
+        get '/products?model_name=GH3'
+        LOG.debug last_response.body
+        results = JSON.parse(last_response.body)
+        results[0]['model_name'].should be == 'GH3'
+      end
     end
 
     context "POST" do
@@ -36,7 +51,6 @@ describe "The Quartermaster API", :type => :api do
 
       it "should respond with an ID" do
         post '/products', subject.to_json
-        LOG.debug last_response.body
         data = OpenStruct.new(JSON.parse(last_response.body))
         data.id.should be
       end
@@ -67,9 +81,18 @@ describe "The Quartermaster API", :type => :api do
 
     context "PUT should update a product" do
       it "should respond with 200 if successful" do
-        subject.manufacturer = subject.manufacturer + rand(3).to_s
+        before_manufacturer = subject.manufacturer
+        subject.manufacturer = before_manufacturer + rand(3).to_s
         put "/product/#{subject.id}", subject.to_json
         last_response.status.should be == 200
+      end
+
+      it "should respond with the updated product" do
+        before_manufacturer = subject.manufacturer
+        subject.manufacturer = before_manufacturer + rand(3).to_s
+        put "/product/#{subject.id}", subject.to_json
+        data = OpenStruct.new(JSON.parse(last_response.body))
+        data.manufacturer.should be == before_manufacturer
       end
 
       it "should respond with a 404 when the product doesn't exist" do

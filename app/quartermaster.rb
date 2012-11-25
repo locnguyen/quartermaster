@@ -77,7 +77,15 @@ class Quartermaster < Sinatra::Base
   end
 
   get '/products' do
-    products = Product.all
+
+    if params[:model_name]
+      products = Product.all(:model_name.like => params[:model_name])
+    elsif params[:manufacturer]
+      products = Product.all(:manufacturer.like => params[:manufacturer])
+    else
+      products = Product.all
+    end
+
     products.to_json
   end
 
@@ -104,6 +112,7 @@ class Quartermaster < Sinatra::Base
 
     if product.update
       status 200
+      product.to_json
     else
       halt 500
     end
