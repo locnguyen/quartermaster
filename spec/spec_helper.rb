@@ -1,20 +1,23 @@
 ENV['RACK_ENV'] = 'test'
+root_dir = File.expand_path('../../', __FILE__) # get absolute path of root directory
 
-require_relative '../app/quartermaster'
+require "#{root_dir}/app/quartermaster"
 require 'rubygems'
 require 'dm-rspec2'
 require 'rack/test'
 require 'sinatra'
 require 'rspec'
 require 'database_cleaner'
-
-app_dir = File.expand_path('../', __FILE__) # get absolute directory of app directory
-Dir["#{app_dir}/app/models/**/*.rb"].each { |f| require f }
+require 'dm-sweatshop'
+require 'spec_fixtures'
 
 set :run, false
 set :raise_errors, true
 set :dump_errors, true
 set :logging, true
+
+LOG = Logger.new("#{root_dir}/tmp/rspec.log")
+LOG.datetime_format = '%Y-%m-%d %H:%M'
 
 RSpec.configure do |config|
   config.include DataMapper::Matchers
@@ -30,6 +33,8 @@ RSpec.configure do |config|
 
   config.before(:each) do
     DatabaseCleaner.start
+    full_example_description = "#{self.class.description} #{@method_name}"
+    # LOG.debug "\n\n#{full_example_description}\n#{'-' * (full_example_description.length)}"
   end
 
   config.after(:each) do

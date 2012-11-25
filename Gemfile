@@ -20,4 +20,5 @@ group :development, :test do
   gem 'rb-fchange', :require => false
   gem 'rack-test'
   gem 'database_cleaner'
+  gem 'dm-sweatshop'
 end
