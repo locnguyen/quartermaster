@@ -68,6 +68,7 @@ class Quartermaster < Sinatra::Base
 
     if product.saved?
       content_type :json
+      headers 'location' => "/product/#{product.id}"
       status 201
       product.to_json
     else

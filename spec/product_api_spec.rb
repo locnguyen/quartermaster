@@ -51,8 +51,14 @@ describe "The Products API" do
 
       it "should respond with a date for created_at" do
         post '/products', subject.to_json
-        json = JSON.parse(last_response.body)
-        json['created_at'].should be
+        data = OpenStruct.new(JSON.parse(last_response.body))
+        data.created_at.should be
+      end
+
+      it "should respond with a Location URI" do
+        post '/products', subject.to_json
+        data = OpenStruct.new(JSON.parse(last_response.body))
+        last_response.headers['Location'].should be == "/product/#{data.id}"
       end
     end
   end
