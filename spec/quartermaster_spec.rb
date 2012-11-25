@@ -3,6 +3,7 @@ require 'sinatra'
 require 'ostruct'
 
 describe "The Quartermaster API", :type => :api do
+
   before do
     header 'HTTP_ACCEPT', 'application/json'
     header 'CONTENT_TYPE', 'application/json'
@@ -14,6 +15,7 @@ describe "The Quartermaster API", :type => :api do
   end
 
   describe "/products" do
+
     context "GET" do
       it "should respond with all products" do
         50.of { Product.gen }
@@ -64,10 +66,11 @@ describe "The Quartermaster API", :type => :api do
   end
 
   describe "/product/:id" do
+
     subject { Product.gen }
 
     context "GET" do
-      it "should respond a product with the ID" do
+      it "should respond with a product with the ID" do
         get "/product/#{subject.id}"
         data = OpenStruct.new(JSON.parse(last_response.body))
         data.id.should be
@@ -79,7 +82,7 @@ describe "The Quartermaster API", :type => :api do
       end
     end
 
-    context "PUT should update a product" do
+    context "PUT" do
       it "should respond with 200 if successful" do
         before_manufacturer = subject.manufacturer
         subject.manufacturer = before_manufacturer + rand(3).to_s
