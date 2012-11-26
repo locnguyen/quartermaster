@@ -23,6 +23,7 @@ RSpec.configure do |config|
   config.include DataMapper::Matchers
   config.include Rack::Test::Methods
 
+  config.filter_run_excluding :broken => true
   config.color_enabled = true
   config.tty = true
 

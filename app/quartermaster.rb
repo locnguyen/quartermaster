@@ -134,4 +134,8 @@ class Quartermaster < Sinatra::Base
       halt 500
     end
   end
+
+  get '/assets' do
+    Asset.all.to_json
+  end
 end

@@ -4,14 +4,25 @@ require 'ostruct'
 describe "The Assets API" do
 
   describe "/assets" do
-    context "GET" do
-      it "should respond with all assets"
 
-      it "should respond with all assets for a product with the model name"
+    context "GET" do
+      it "should respond with all assets" do
+        5.of { Product.gen }
+        get '/assets'
+        json = JSON.parse(last_response.body)
+        LOG.debug json
+        json.length.should be == 50
+      end
     end
 
     context "POST" do
-      it "should respond with 201 if the asset was created"
+
+      subject { Product.gen }
+
+      it "should respond with 201 if the asset was created" do
+        post '/assets', subject.to_json
+        last_response.status.should be == 201
+      end
 
       it "should respond with an ID"
 
