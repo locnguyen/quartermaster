@@ -12,7 +12,7 @@ require 'dm-sweatshop'
 require 'spec_fixtures'
 
 set :run, false
-set :raise_errors, true
+set :raise_errors, false
 set :dump_errors, true
 set :logging, true
 

@@ -26,7 +26,7 @@ class Quartermaster < Sinatra::Base
     LOG.level = Logger::DEBUG
     DataMapper::Logger.new(STDOUT, :debug)
     DataMapper::Logger.new("#{Dir.pwd}/#{settings.tmpDir}/dm-dev.log", :debug)
-    DataMapper::Model.raise_on_save_failure = true
+    DataMapper::Model.raise_on_save_failure = false
    
     #DataMapper.setup(:default, {
     #  adapter: settings.adapter,
@@ -63,7 +63,7 @@ class Quartermaster < Sinatra::Base
 
   post '/products' do
     data = JSON.parse(request.body.read)
-    LOG.debug data
+
     product = Product.create(data)
 
     if product.saved?
@@ -137,5 +137,38 @@ class Quartermaster < Sinatra::Base
 
   get '/assets' do
     Asset.all.to_json
+  end
+
+  post '/assets' do
+    data = JSON.parse(request.body.read)
+    struct = OpenStruct.new(data)
+
+    LOG.debug struct
+
+    product = Product.get(struct.product_id)
+
+    if product.nil?
+      halt 404, 'Product not found'
+    end
+
+    asset = Asset.new({
+      serial_number: struct.serial_number,
+      service_tag: struct.service_tag,
+      acquire_date: Date.parse(struct.acquire_date),
+      product: product
+    })
+
+    if asset.save
+      status 201
+      headers 'location' => "/asset/#{asset.id}"
+      asset.to_json
+    else
+      LOG.debug asset.errors.inspect
+      LOG.debug $!
+
+
+
+      halt 400
+    end
   end
 end

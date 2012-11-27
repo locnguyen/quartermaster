@@ -10,17 +10,21 @@ describe "The Assets API" do
         5.of { Product.gen }
         get '/assets'
         json = JSON.parse(last_response.body)
-        LOG.debug json
         json.length.should be == 50
       end
     end
 
     context "POST" do
 
-      subject { Product.gen }
+      let(:product) { Product.gen }
+
+      subject {
+        a = Asset.make
+        a.product_id = product.id
+        a
+      }
 
       it "should respond with 201 if the asset was created" do
-        pending
         post '/assets', subject.to_json
         last_response.status.should be == 201
       end
