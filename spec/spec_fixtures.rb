@@ -1,4 +1,5 @@
 require 'dm-sweatshop'
+require 'time'
 
 include DataMapper::Sweatshop::Unique
 
@@ -20,6 +21,6 @@ Product.fixture(:panasonic_gh3) {{
 
 Asset.fixture {{
   :serial_number => unique(:serial_number) { /\w+/.gen },
-  :service_tag => unique(:service_tag) { /\w+/.gen }
-  #:acquire_date => Time.at(rand * Time.now.to_f)
+  :service_tag => unique(:service_tag) { /\w+/.gen },
+  :acquire_date => Time.at(rand * Time.now.to_i).to_date
 }}
