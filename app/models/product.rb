@@ -10,7 +10,7 @@ class Product
   property :created_at , DateTime
   property :updated_at , DateTime
 
-  has n, :assets
+  has n, :assets, :constraint => :destroy
 
   def create_asset
     asset = Asset.new({ product: self })

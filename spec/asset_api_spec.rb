@@ -20,6 +20,7 @@ describe "The Assets API" do
       subject { Product.gen }
 
       it "should respond with 201 if the asset was created" do
+        pending
         post '/assets', subject.to_json
         last_response.status.should be == 201
       end
