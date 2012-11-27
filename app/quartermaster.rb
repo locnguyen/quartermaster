@@ -141,34 +141,29 @@ class Quartermaster < Sinatra::Base
 
   post '/assets' do
     data = JSON.parse(request.body.read)
-    struct = OpenStruct.new(data)
 
-    LOG.debug struct
+    halt 404, 'Product not found' if Product.get(data['product_id']).nil?
 
-    product = Product.get(struct.product_id)
+    data['acquire_date'] = Date.parse(data['acquire_date'])
 
-    if product.nil?
-      halt 404, 'Product not found'
-    end
+    asset = Asset.create(data)
 
-    asset = Asset.new({
-      serial_number: struct.serial_number,
-      service_tag: struct.service_tag,
-      acquire_date: Date.parse(struct.acquire_date),
-      product: product
-    })
-
-    if asset.save
+    if asset.saved?
       status 201
       headers 'location' => "/asset/#{asset.id}"
       asset.to_json
     else
       LOG.debug asset.errors.inspect
       LOG.debug $!
-
-
-
       halt 400
     end
+  end
+
+  get '/asset/:id' do
+    asset = Asset.get(params[:id])
+
+    halt 404 if asset.nil?
+
+    asset.to_json
   end
 end

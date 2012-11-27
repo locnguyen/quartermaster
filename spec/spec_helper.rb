@@ -35,7 +35,7 @@ RSpec.configure do |config|
   config.before(:each) do
     DatabaseCleaner.start
     full_example_description = "#{self.class.description} #{@method_name}"
-    # LOG.debug "\n\n#{full_example_description}\n#{'-' * (full_example_description.length)}"
+    LOG.debug "\n\n#{full_example_description}\n#{'-' * (full_example_description.length)}"
   end
 
   config.after(:each) do

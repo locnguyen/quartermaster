@@ -2,8 +2,6 @@ require_relative 'spec_helper'
 
 describe Asset do
 
-  subject { Asset.new({ product: Product.new })}
-
   it { should have_property :id }
   it { should have_property :serial_number }
   it { should have_property :service_tag }

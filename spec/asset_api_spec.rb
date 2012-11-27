@@ -7,7 +7,7 @@ describe "The Assets API" do
 
     context "GET" do
       it "should respond with all assets" do
-        5.of { Product.gen }
+        5.of { Product.gen(:with_assets) }
         get '/assets'
         json = JSON.parse(last_response.body)
         json.length.should be == 50
@@ -18,32 +18,47 @@ describe "The Assets API" do
 
       let(:product) { Product.gen }
 
-      subject {
-        a = Asset.make
-        a.product_id = product.id
-        a
-      }
+      subject { Asset.make(:product_id => product.id) }
 
       it "should respond with 201 if the asset was created" do
         post '/assets', subject.to_json
         last_response.status.should be == 201
       end
 
-      it "should respond with an ID"
+      it "should respond with an ID" do
+        post '/assets', subject.to_json
+        data = OpenStruct.new(JSON.parse(last_response.body))
+        data.id.should be
+      end
 
-      it "should respond with a created_date"
+      it "should respond with a created_date" do
+        post '/assets', subject.to_json
+        data = OpenStruct.new(JSON.parse(last_response.body))
+        data.created_at.should be
+      end
 
-      it "should respond with a Location URI header"
+      it "should respond with a Location URI header" do
+        post '/assets', subject.to_json
+        data = OpenStruct.new(JSON.parse(last_response.body))
+        last_response.headers['location'].should be == "/asset/#{data.id}"
+      end
     end
   end
 
   describe "/asset/:id" do
     context "GET" do
-      it "should respond with the asset"
+      subject { Asset.gen }
 
-      it "should respond with a 404 if the asset does not exist"
+      it "should respond with the asset" do
+        get "/asset/#{subject.id}"
+        data = OpenStruct.new(JSON.parse(last_response.body))
+        data.id.should be
+      end
 
-      it "should respond with a 400 if an ID parameter is not provided"
+      it "should respond with a 404 if the asset does not exist" do
+        get '/asset/9999'
+        last_response.status.should be == 404
+      end
     end
 
     context "PUT" do
