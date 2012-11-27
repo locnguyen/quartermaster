@@ -73,7 +73,7 @@ class Quartermaster < Sinatra::Base
       product.to_json
     else
       LOG.debug product.errors.inspect
-      halt 500
+      halt 400
     end
   end
 
@@ -93,9 +93,7 @@ class Quartermaster < Sinatra::Base
   get '/product/:id' do
     product = Product.get(params[:id])
 
-    if product.nil?
-      halt 404
-    end
+    halt 404 if product.nil?
 
     product.to_json
   end
@@ -103,9 +101,7 @@ class Quartermaster < Sinatra::Base
   put '/product/:id' do
     product = Product.get(params[:id])
 
-    if product.nil?
-      halt 404
-    end
+    halt 404 if product.nil?
 
     data = OpenStruct.new(JSON.parse(request.body.read))
 
@@ -122,9 +118,7 @@ class Quartermaster < Sinatra::Base
   delete '/product/:id' do
     product = Product.get(params[:id])
 
-    if product.nil?
-      halt 404
-    end
+    halt 404 if product.nil?
 
     if product.destroy
       content_type :text
