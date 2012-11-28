@@ -126,11 +126,12 @@ class Quartermaster < Sinatra::Base
 
   post '/assets' do
     data = JSON.parse(request.body.read)
-    halt 404, 'Product not found' if Product.get(data['product_id']).nil?
+    product = Product.get(data['product_id'])
+    halt 404, 'Product not found' if product.nil?
     data['acquire_date'] = Date.parse(data['acquire_date'])
-    asset = Asset.create(data)
+    asset = product.create_asset data
 
-    if asset.saved?
+    if asset.save
       status 201
       headers 'location' => "/asset/#{asset.id}"
       asset.to_json
