@@ -18,4 +18,12 @@ describe Product do
     after_count = subject.assets.size
     before_count.should < after_count
   end
+
+  it "should create an asset with the argument hash" do
+    serial = '1ab3'
+    service = 'x2u87'
+    asset = subject.create_asset({ serial_number: serial, service_tag: service })
+    asset.serial_number.should == serial
+    asset.service_tag.should == service
+  end
 end
