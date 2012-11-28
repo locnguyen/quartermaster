@@ -26,6 +26,6 @@ Product.fix(:with_assets) {{
 
 Asset.fixture {{
   :serial_number => unique(:serial_number) { /\w+/.gen },
-  :service_tag => 'asdfsad',
+  :service_tag => unique(:service_tag) { /\w+/.gen },
   :acquire_date => Time.at(rand * Time.now.to_i).to_date
 }}

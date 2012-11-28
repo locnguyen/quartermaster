@@ -104,7 +104,7 @@ class Quartermaster < Sinatra::Base
       status 200
       product.to_json
     else
-      halt 500
+      halt 400
     end
   end
 
@@ -189,7 +189,7 @@ class Quartermaster < Sinatra::Base
 
     if product.save
       status 201
-      product.to_json
+      product.assets.to_json
     else
       status 400
     end

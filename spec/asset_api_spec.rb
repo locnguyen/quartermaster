@@ -119,7 +119,9 @@ describe "The Assets API" do
       end
 
       it "should increase the product's number of assets if successful" do
-
+         expect {
+           post "/product/#{product.id}/assets", subject.to_json
+         }.to change { Asset.all(:product_id => product.id).size }.from(0).to(3)
       end
     end
 
