@@ -1,7 +1,8 @@
 require 'spec_helper'
-require 'ostruct'
+require 'api_spec_helper'
 
 describe "The Products API" do
+  include ApiSpecHelper
 
   before do
     header 'HTTP_ACCEPT', 'application/json'
@@ -11,16 +12,14 @@ describe "The Products API" do
   describe "/products" do
     context "GET" do
       it "should respond with all products" do
-        50.of { Product.gen }
-
+        10.of { Product.gen }
         get '/products'
         results = JSON.parse(last_response.body)
-        results.length.should == 50
+        results.length.should == 10
       end
 
       it "should respond with products matching manufacturer" do
         10.of { Product.gen(:panasonic) }
-
         get '/products?manufacturer=Panasonic'
         results = JSON.parse(last_response.body)
         results.length.should == 10
@@ -28,7 +27,6 @@ describe "The Products API" do
 
       it "should respond with products matching model name" do
         Product.gen(:panasonic_gh3)
-
         get '/products?model_name=GH3'
         results = JSON.parse(last_response.body)
         results[0]['model_name'].should be == 'GH3'
@@ -45,19 +43,19 @@ describe "The Products API" do
 
       it "should respond with an ID" do
         post '/products', subject.to_json
-        data = OpenStruct.new(JSON.parse(last_response.body))
+        data = json_to_struct last_response.body
         data.id.should be
       end
 
       it "should respond with a date for created_at" do
         post '/products', subject.to_json
-        data = OpenStruct.new(JSON.parse(last_response.body))
+        data = json_to_struct last_response.body
         data.created_at.should be
       end
 
       it "should respond with a Location URI" do
         post '/products', subject.to_json
-        data = OpenStruct.new(JSON.parse(last_response.body))
+        data = json_to_struct last_response.body
         last_response.headers['Location'].should be == "/product/#{data.id}"
       end
     end
@@ -82,8 +80,6 @@ describe "The Products API" do
 
     context "PUT" do
       it "should respond with 200 if successful" do
-        before_manufacturer = subject.manufacturer
-        subject.manufacturer = before_manufacturer + rand(3).to_s
         put "/product/#{subject.id}", subject.to_json
         last_response.status.should be == 200
       end
@@ -91,8 +87,9 @@ describe "The Products API" do
       it "should respond with the updated product" do
         before_manufacturer = subject.manufacturer
         subject.manufacturer = before_manufacturer + rand(3).to_s
+        
         put "/product/#{subject.id}", subject.to_json
-        data = OpenStruct.new(JSON.parse(last_response.body))
+        data = json_to_struct last_response.body
         data.manufacturer.should be == before_manufacturer
       end
 

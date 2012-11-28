@@ -1,7 +1,8 @@
 require 'spec_helper'
-require 'ostruct'
+require 'api_spec_helper'
 
 describe "The Assets API" do
+  include ApiSpecHelper
 
   describe "/assets" do
 
@@ -15,9 +16,7 @@ describe "The Assets API" do
     end
 
     context "POST" do
-
       let(:product) { Product.gen }
-
       subject { Asset.make(:product_id => product.id) }
 
       it "should respond with 201 if the asset was created" do
@@ -27,31 +26,32 @@ describe "The Assets API" do
 
       it "should respond with an ID" do
         post '/assets', subject.to_json
-        data = OpenStruct.new(JSON.parse(last_response.body))
+        data = json_to_struct last_response.body
         data.id.should be
       end
 
       it "should respond with a created_date" do
         post '/assets', subject.to_json
-        data = OpenStruct.new(JSON.parse(last_response.body))
+        data = json_to_struct last_response.body
         data.created_at.should be
       end
 
       it "should respond with a Location URI header" do
         post '/assets', subject.to_json
-        data = OpenStruct.new(JSON.parse(last_response.body))
+        data = json_to_struct last_response.body
         last_response.headers['location'].should be == "/asset/#{data.id}"
       end
     end
   end
 
   describe "/asset/:id" do
+
     context "GET" do
       subject { Asset.gen }
 
       it "should respond with the asset" do
         get "/asset/#{subject.id}"
-        data = OpenStruct.new(JSON.parse(last_response.body))
+        data = json_to_struct last_response.body
         data.id.should be
       end
 
@@ -81,6 +81,7 @@ describe "The Assets API" do
   end
 
   describe "/product/:id/assets" do
+    
     context "POST" do
       it "should respond with 201 if the list of assets was added to the product"
     end
