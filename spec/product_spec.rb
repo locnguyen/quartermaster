@@ -13,10 +13,7 @@ describe Product do
   end
 
   it "should create an asset and add to the product collection" do
-    before_count = subject.assets.size
-    subject.create_asset
-    after_count = subject.assets.size
-    before_count.should < after_count
+    expect { subject.create_asset }.to change { subject.assets.size }.from(0).to(1)
   end
 
   it "should create an asset with the argument hash" do
