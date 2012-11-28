@@ -12,8 +12,10 @@ class Product
 
   has n, :assets, :constraint => :destroy
 
-  def create_asset
-    asset = Asset.new({ product: self })
+  def create_asset(a = {})
+    asset = Asset.new
+    asset.product = self
+    asset.attributes = a unless a.nil?
     assets << asset
     asset
   end

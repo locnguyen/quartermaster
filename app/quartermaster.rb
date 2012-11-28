@@ -27,7 +27,7 @@ class Quartermaster < Sinatra::Base
     DataMapper::Logger.new(STDOUT, :debug)
     DataMapper::Logger.new("#{Dir.pwd}/#{settings.tmpDir}/dm-dev.log", :debug)
     DataMapper::Model.raise_on_save_failure = false
-   
+
     #DataMapper.setup(:default, {
     #  adapter: settings.adapter,
     #  username: settings.username,
@@ -175,5 +175,22 @@ class Quartermaster < Sinatra::Base
   get '/product/:id/assets' do
     assets = Asset.all(:product_id => params[:id])
     assets.to_json
+  end
+
+  post '/product/:id/assets' do
+    product = Product.get(params[:id])
+    halt 404 if product.nil?
+    assets = JSON.parse(request.body.read)
+
+    assets.each do |a|
+      product.create_asset a
+    end
+
+    if product.save
+      status 201
+      product.to_json
+    else
+      status 400
+    end
   end
 end

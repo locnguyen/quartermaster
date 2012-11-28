@@ -65,7 +65,6 @@ describe "The Assets API" do
       subject { Asset.gen }
 
       it "should respond with a 200 if successful" do
-        before_serial_number = subject.serial_number
         subject.serial_number = 'asdf' + rand(10).to_s
         put "/asset/#{subject.id}", subject.to_json
         last_response.status.should == 200
@@ -111,7 +110,17 @@ describe "The Assets API" do
   describe "/product/:id/assets" do
 
     context "POST" do
-      it "should respond with 201 if the list of assets was added to the product"
+      let(:product) { Product.gen }
+      subject { 3.of { Asset.make(:product_id => product.id) } }
+
+      it "should respond with 201 if the list of assets was added to the product" do
+        post "/product/#{product.id}/assets", subject.to_json
+        last_response.status.should == 201
+      end
+
+      it "should increase the product's number of assets if successful" do
+
+      end
     end
 
     context "GET" do
