@@ -62,32 +62,66 @@ describe "The Assets API" do
     end
 
     context "PUT" do
-      it "should respond with a 200 if successful"
+      subject { Asset.gen }
 
-      it "should respond with the updated asset"
+      it "should respond with a 200 if successful" do
+        before_serial_number = subject.serial_number
+        subject.serial_number = 'asdf' + rand(10).to_s
+        put "/asset/#{subject.id}", subject.to_json
+        last_response.status.should == 200
+      end
 
-      it "should respond with a 400 if an ID parameter is not provided"
+      it "should respond with the updated asset" do
+        before_serial_number = subject.serial_number
+        subject.serial_number = 'asdf' + rand(10).to_s
+        put "/asset/#{subject.id}", subject.to_json
+        struct = json_to_struct last_response.body
+        struct.serial_number.should_not be == before_serial_number
+      end
 
-      it "should respond with a 404 if the asset doesn't exist"
+      it "should respond with a 404 if the asset doesn't exist" do
+        put '/asset/9999', subject.to_json
+        last_response.status.should == 404
+      end
     end
 
     context "DELETE" do
-      it "should respond with 200 if successful"
+      subject { Asset.gen }
 
-      it "should respond with 404 if the asset is not found"
+      it "should respond with 200 if successful" do
+        delete "/asset/#{subject.id}"
+        last_response.status.should == 200
+      end
 
-      it "should respond with 404 if called a second time after the first is successful"
+      it "should respond with 404 if the asset is not found" do
+        delete '/asset/9999'
+        last_response.status.should == 404
+      end
+
+      it "should respond with 404 if called a second time after the first is successful" do
+        delete "/asset/#{subject.id}"    
+        last_response.status.should == 200
+
+        delete "/asset/#{subject.id}"    
+        last_response.status.should == 404 
+      end
     end
   end
 
   describe "/product/:id/assets" do
-    
+
     context "POST" do
       it "should respond with 201 if the list of assets was added to the product"
     end
 
     context "GET" do
-      it "should respond with all the assets for the product"
+      subject { Product.gen(:with_assets) }
+
+      it "should respond with all the assets for the product" do
+        get "/product/#{subject.id}/assets"
+        assets = JSON.parse(last_response.body)
+        assets.length.should == subject.assets.length
+      end
     end
   end
 end

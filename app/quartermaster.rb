@@ -63,7 +63,6 @@ class Quartermaster < Sinatra::Base
 
   post '/products' do
     data = JSON.parse(request.body.read)
-
     product = Product.create(data)
 
     if product.saved?
@@ -78,7 +77,6 @@ class Quartermaster < Sinatra::Base
   end
 
   get '/products' do
-
     if params[:model_name]
       products = Product.all(:model_name.like => params[:model_name])
     elsif params[:manufacturer]
@@ -92,19 +90,14 @@ class Quartermaster < Sinatra::Base
 
   get '/product/:id' do
     product = Product.get(params[:id])
-
     halt 404 if product.nil?
-
     product.to_json
   end
 
   put '/product/:id' do
     product = Product.get(params[:id])
-
     halt 404 if product.nil?
-
     data = OpenStruct.new(JSON.parse(request.body.read))
-
     product.attributes = data
 
     if product.update
@@ -117,13 +110,11 @@ class Quartermaster < Sinatra::Base
 
   delete '/product/:id' do
     product = Product.get(params[:id])
-
     halt 404 if product.nil?
 
     if product.destroy
-      content_type :text
       status 200
-      'Product was deleted'
+      'Product deleted'
     else
       halt 500
     end
@@ -135,11 +126,8 @@ class Quartermaster < Sinatra::Base
 
   post '/assets' do
     data = JSON.parse(request.body.read)
-
     halt 404, 'Product not found' if Product.get(data['product_id']).nil?
-
     data['acquire_date'] = Date.parse(data['acquire_date'])
-
     asset = Asset.create(data)
 
     if asset.saved?
@@ -155,9 +143,37 @@ class Quartermaster < Sinatra::Base
 
   get '/asset/:id' do
     asset = Asset.get(params[:id])
+    halt 404 if asset.nil?
+    asset.to_json
+  end
 
+  put '/asset/:id' do
+    asset = Asset.get(params[:id])
+    halt 404 if asset.nil?
+    asset.attributes = JSON.parse(request.body.read)
+
+    if asset.save
+      status 200
+      asset.to_json
+    else
+      status 400
+    end
+  end
+
+  delete '/asset/:id' do
+    asset = Asset.get(params[:id])
     halt 404 if asset.nil?
 
-    asset.to_json
+    if asset.destroy
+      status 200
+      'Asset deleted'
+    else
+      status 500
+    end
+  end
+
+  get '/product/:id/assets' do
+    assets = Asset.all(:product_id => params[:id])
+    assets.to_json
   end
 end
