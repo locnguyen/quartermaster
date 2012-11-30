@@ -22,4 +22,10 @@ describe Reservation do
     after_count = subject.line_items.size
     after_count.should > before_count
   end
+
+  it "should find reservations that fall in between a start and end date"
+
+  it "should find reservations are still open, or the end date has not passed"
+
+  it "should find reservations that are closed, or the end date has passed"
 end
