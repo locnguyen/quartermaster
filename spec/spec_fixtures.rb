@@ -3,6 +3,18 @@ require 'time'
 
 include DataMapper::Sweatshop::Unique
 
+def rand_date
+  Time.at(rand * Time.now.to_i).to_date
+end
+
+def rand_date_after(dt)
+   dt + rand(100)
+end
+
+def rand_date_before(dt)
+  dt - rand(100)
+end
+
 Product.fixture {{
   :manufacturer => %w(Panasonic Sony Canon Red Nikon)[rand(5)],
   :model_name => unique(:model_name) { /\w+/.gen }
@@ -32,4 +44,6 @@ Asset.fixture {{
 
 Reservation.fixture {{
   :name => /\w+/.gen,
+  :start_date => start_date = rand_date,
+  :end_date => start_date + rand(100)
 }}

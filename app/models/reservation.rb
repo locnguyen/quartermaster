@@ -21,6 +21,4 @@ class Reservation
     line_items << line_item
     line_item
   end
-
-
 end
