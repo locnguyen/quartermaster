@@ -16,8 +16,9 @@ class Reservation
   #  @line_items = []
   # end
 
-  def create_line_item
+  def create_line_item(attrs = {})
     line_item = LineItem.new({ reservation: self })
+    line_item.attributes = attrs
     line_items << line_item
     line_item
   end

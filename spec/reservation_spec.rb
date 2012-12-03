@@ -21,7 +21,9 @@ describe Reservation do
       subject.id.should == subject.create_line_item.reservation.id
     end
 
-    it "should accept attributes to create one"
+    it "should accept attributes to create one" do
+      subject.create_line_item({ notes: 'test notes' }).should be
+    end
 
     it "should create one and add to the reservation" do
       expect {
