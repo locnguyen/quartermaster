@@ -42,6 +42,12 @@ Asset.fixture {{
   :acquire_date => Time.at(rand * Time.now.to_i).to_date
 }}
 
+LineItem.fixture {{
+  :notes => /[:sentence:]/.gen,
+  :asset => 1.of { Asset.pick },
+  :reservation => 1.of { Reservation.pick }
+}}
+
 Reservation.fixture {{
   :name => /\w+/.gen,
   :start_date => start_date = rand_date,

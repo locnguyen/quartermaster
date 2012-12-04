@@ -99,11 +99,14 @@ describe Reservation do
 
   context "finding based on dates" do
     before do
-      #10.of { Reservation.gen(:closed_last_year) }
-      #5.of { Reservation.gen(:closing_next_year) }
+      50.times { Product.gen }
+      100.times { Asset.gen }
+      5.of { Reservation.gen }
     end
 
-    it "should find reservations that fall in between a start and end date"
+    it "should find reservations that fall in between a start and end date" do
+      true.should be_true
+    end
 
     it "should find reservations are still open, or the end date has not passed"
 
