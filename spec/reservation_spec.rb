@@ -10,9 +10,58 @@ describe Reservation do
   it { should have_many :line_items }
   it { should have_many(:assets).through(:line_items) }
 
+  describe "changing the reservation" do
+    it "can check whether the reservation is editable" do
+      subject.should respond_to :still_editable?
+    end
+
+    it "should not be editable if the start date has passed" do
+      subject.start_date = Date.today - 1
+      subject.still_editable?.should be_false
+    end
+
+    it "should be editable if the start date has not passed" do
+      subject.start_date = Date.today + 1
+      subject.still_editable?.should be_true
+    end
+
+    context "after the start date has passed" do
+      subject {
+        Reservation.gen({ start_date: Date.today + 1, end_date: Date.today + 3 })
+      }
+
+      it "should not allow the line items to increase" do
+        subject.start_date = Date.today - 1
+        puts "start date = #{subject.start_date} #{subject.still_editable?}"
+        expect {
+          subject.create_line_item
+        }.to_not change { subject.line_items.size } 
+      end
+
+      it "should not allow the line items to decrease" do
+        line_item = subject.create_line_item
+        line_item.id = 1
+        subject.start_date = Date.today - 1
+        expect {
+          subject.remove_line_item 1
+        }.to_not change { subject.line_items.size }
+      end
+    end
+  end
+
   context "managing line items" do
-    subject { Reservation.gen }
+    subject { 
+      Reservation.gen({ start_date: Date.today + 1, end_date: Date.today + 10 })
+    }
     
+    it "can create line items" do
+      subject.should respond_to :create_line_item
+    end
+
+    it "can remove a line item" do
+      subject.should respond_to :remove_line_item
+    end
+
     it "should create one without attributes" do
       subject.create_line_item.should be
     end
@@ -30,14 +79,6 @@ describe Reservation do
         subject.create_line_item
       }.to change { subject.line_items.size }.from(0).to(1)
     end
-
-    it "should allow any to be added when the start date has not passed"
-
-    it "should allow any to be deleted when the start date has not passed"
-
-    it "should not allow any to be added after the start date has passed"
-
-    it "should not allow any to be deleted afte rthe start date has passed"
   end
 
   context "finding based on dates" do
