@@ -25,6 +25,22 @@ describe Reservation do
       subject.still_editable?.should be_true
     end
 
+    it "should take a date range for start and end dates" do
+      subject.should respond_to(:set_date_range).with(2).arguments
+    end
+
+    it "should take a date range with ordered dates" do
+      subject.set_date_range(Date.today, Date.today + 1)
+      subject.start_date.should == Date.today
+      subject.end_date.should == Date.today + 1
+    end
+
+    it "should not take a date range with unordered dates" do
+      expect {
+        subject.set_date_range(Date.today + 1, Date.today)
+      }.to raise_error(ArgumentError)
+    end
+
     context "after the start date has passed" do
       subject {
         Reservation.gen({ start_date: Date.today + 1, end_date: Date.today + 3 })

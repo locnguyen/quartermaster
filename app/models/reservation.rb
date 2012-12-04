@@ -23,11 +23,17 @@ class Reservation
 
   def remove_line_item(asset_id)
     if still_editable?
-      line_items.delete_if { |i| i.asset_id == asset_id }
+      line_items.delete_if { |item| item.id == asset_id }
     end
   end
 
   def still_editable?
     start_date > Date.today
+  end
+
+  def set_date_range(start_dt, end_dt)
+    raise ArgumentError if start_dt > end_dt
+    @start_date = start_dt
+    @end_date = end_dt
   end
 end
