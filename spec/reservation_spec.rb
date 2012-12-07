@@ -48,7 +48,6 @@ describe Reservation do
 
       it "should not allow the line items to increase" do
         subject.start_date = Date.today - 1
-        puts "start date = #{subject.start_date} #{subject.still_editable?}"
         expect {
           subject.create_line_item
         }.to_not change { subject.line_items.size } 
@@ -101,15 +100,27 @@ describe Reservation do
     before do
       50.times { Product.gen }
       100.times { Asset.gen }
-      5.of { Reservation.gen }
     end
 
     it "should find reservations that fall in between a start and end date" do
-      true.should be_true
+      rand_records = rand(10)
+      rand_records.of { Reservation.gen({ start_date: Date.today - 5, end_date: Date.today + 5 })}
+      rand(5).of { Reservation.gen({ start_date: Date.today - 100, end_date: Date.today - 90 })}
+      Reservation.in_date_range(Date.today - 1, Date.today + 1).length.should == rand_records
     end
 
-    it "should find reservations are still open, or the end date has not passed"
+    it "should find reservations are still open, or the end date has not passed" do
+      rand_records = rand(10)
+      rand_records.of { Reservation.gen({ start_date: Date.today, end_date: Date.today + rand(200) })}
+      rand(5).of { Reservation.gen({ start_date: Date.today - 100, end_date: Date.today - 90 })}
+      Reservation.currently_open.length.should == rand_records
+    end
 
-    it "should find reservations that are closed, or the end date has passed"
+    it "should find reservations that are closed, or the end date has passed" do
+      rand_records = rand(10)
+      rand_records.of { Reservation.gen({ start_date: Date.today - 100, end_date: Date.today - rand(99) })}
+      rand(5).of { Reservation.gen({ start_date: Date.today, end_date: Date.today + rand(100) })}
+      Reservation.closed.length.should == rand_records
+    end
   end
 end

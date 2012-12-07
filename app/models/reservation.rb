@@ -36,4 +36,17 @@ class Reservation
     @start_date = start_dt
     @end_date = end_dt
   end
+
+  def self.in_date_range(start_dt, end_dt)
+    all(:start_date.lt => start_dt, :end_date.gt => end_dt)
+  end
+
+  def self.currently_open
+    all(:end_date.gt => Date.today)
+  end
+
+  def self.closed
+    all(:end_date.lt => Date.today)
+  end
+
 end
