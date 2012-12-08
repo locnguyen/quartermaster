@@ -1,0 +1,3 @@
+Product = Backbone.Model.extend({
+
+});
